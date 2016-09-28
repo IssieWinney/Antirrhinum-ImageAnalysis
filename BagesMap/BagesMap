@@ -1,0 +1,14 @@
+# Isabel Winney
+# Created 20160928
+
+# Script for mapping the bages site and adding polygons to define the study plot areas
+
+# Load libraries:
+library(ggmap)
+library(ggplot2)
+
+# Load a map of the area
+BagesMap <- get_map(location = c(lon = 2.975, lat = 43.105), zoom = 15)
+
+# Take a look
+ggmap(BagesMap)
