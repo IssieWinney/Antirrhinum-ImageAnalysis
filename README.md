@@ -1,2 +1,2 @@
-# Antirrhinum-ImageAnalysis
-Scripts for analysing environmental images of wild Antirrhinum majus
+# Antirrhinum
+Projects for analysing Antirrhinum majus data
