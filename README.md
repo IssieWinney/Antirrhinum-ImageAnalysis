@@ -1,2 +1,2 @@
 # Antirrhinum
-Projects for analysing Antirrhinum majus data
+Scripts for analysing Antirrhinum majus environment images
