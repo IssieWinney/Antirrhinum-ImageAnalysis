@@ -1,0 +1,75 @@
+---
+title: "Trainable WEKA Segmentation"
+author: "Isabel Winney"
+date: "17 October 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Trainable WEKA Segmentation
+
+### What is this?
+
+Trainable WEKA segmentation is a set of algorithms made to detect edges, colours, shapes, shades, and many defining features within an image. This training set can be applied to a second image to find the same features within a new image landscape.
+
+### How do I use it?
+
+#### Single image training
+
+ - Load Fiji
+ - Load image MAXIMUM SIZE 1024 pixels!
+ - Load Plugins --> Segmentation --> Trainable WEKA segmentation
+
+The image will now be in the training window. Draw on the image a) the areas that you would classify as class 1, b) the areas that you would classify as class 2. Be careful to keep the lines within the feature you want to define. After drawing each line, click 'Add to  class...' so that the feature can be assigned to class 1 or class 2.
+
+In the case of the \textit{Antirrhinum majus} environment photos, class 1 is in red and represents all plant matter, class 2 is in green and represents all non-plant matter (ground, pickets, labels, people).
+
+To see the result of the classification, click 'Apply classifier'. The program will take some time, and then present its assignment of the image to class 1 or 2, one in red and one in green. If you are not happy with the classification, continue to define lines that represent class 1 or 2 and add these to the classifications to help train the program.
+
+Once you are happy with the classifications, save the set of classifiers as by clicking 'Save classifier'. However, I don't know what this actually saves.
+
+To save the class 1/class2 labels so that a second image can be segmented using the same rules, click 'Save data'.
+
+#### Multiple image training
+
+Trainable WEKA can be trained with multiple representative images. These images must be opened as a stack of images using file --> import --> stack from list. The images will be grouped together, and all the images can be used for training the WEKA.
+
+The WEKA can then be applied to other images. If the stack was a representative sample, the training should be comprehensive.
+
+#### Image processing
+
+To process a single image, load the image and open the WEKA GUI (or the other way around, WEKA will give the option to open an image). Load the classification options by asking to 'load data', and once the classification has loaded, click 'Train classifier' to have the image rendered in green and red.
+
+To process multiple images, ask to 'Apply classifier' and select multiple images. The program will ask whether you want the images saved to disc rather than opened in Fiji. If yes, you choose the location of the new files.
+
+NOTE: using this option within the original folder will \textbf{overwrite} the existing photo. This is because the WEKA will make a file of the same name. Make sure that the script makes a copy, or that the photos are copies already.
+
+### What next?
+
+The black and white outputs from the segmentation can be classified as percentage of black pixels to percentage of white. If the segmentation has been defined well, this results in a percentage of vegetative to non-vegetative cover within the image.
+
+
+### Questions that I still have
+
+ - how many images do I need to train this on?
+ - can someone easily verify the classification?
+ - how do I show that this is consistent?
+ - How do I record the segmentation rules explicitly?
+ - can the segmentation rules be redefined easily?
+ - how do I know when the segmentation is 'good enough'?
+ 
+ 
+### Situations that I need to train the segmenter on include...
+
+  - soil
+  - black or dark rocks
+  - shadows vs no shadows
+  - thin grass
+  - lichen (depends how common it is)
+  - very dark images (weak sunlight / overcast)
+  - very bright images (strong sunlight, bleached out photo)
+  
+So I should guarantee that these images are available in the training set.
