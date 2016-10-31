@@ -5,10 +5,6 @@ date: "17 October 2016"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 ## Trainable WEKA Segmentation
 
 ### What is this?
@@ -35,7 +31,11 @@ To save the class 1/class2 labels so that a second image can be segmented using 
 
 #### Multiple image training
 
-Trainable WEKA can be trained with multiple representative images. These images must be opened as a stack of images using file --> import --> stack from list. The images will be grouped together, and all the images can be used for training the WEKA.
+Trainable WEKA can be trained with multiple representative images. These images must be opened as a stack of images:
+
+ - File --> Import --> Image Sequence
+ 
+The images will be grouped together, and all the images can be used for training the WEKA.
 
 The WEKA can then be applied to other images. If the stack was a representative sample, the training should be comprehensive.
 
