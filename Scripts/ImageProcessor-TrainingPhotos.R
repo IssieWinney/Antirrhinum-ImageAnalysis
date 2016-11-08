@@ -5,9 +5,10 @@
 # This is a program to take a folder of images and classify all the images in
 # the folder as environment images, leaf images, or flower images.
 
-# You need to start by specifying the filepath to the photos here:
+# You need to start by specifying the filepath to the photos here. 
+# myRoot must be a FULL FILEPATH:
 
-myRoot <- ".\\TrainingImages\\TrainingTheWEKA\\"
+myRoot <- "C:/Users/User/ownCloud/Git-Analysis/Antirrhinum-ImageAnalysis/TrainingImages/TrainingTheWEKA/"
 
 PhotoFilepath <- paste(myRoot, "Original-ImageTyping", sep = "")
 OutputFilepath <- paste(myRoot, "Resized", sep = "")
@@ -50,7 +51,7 @@ BatchResize(PhotoFilepath, 0.1, OutputFilepath)
 
 source("./Functions/resultsConcatenator-20161020.R")
 
-ResultsFilepath <- paste(myRoot, "ImageProcessing/Results/", sep = "")
+ResultsFilepath <- paste(myRoot, "Results/", sep = "")
 
 resultsConcatenator(ResultsFilepath,"SegmentationResults")
 
