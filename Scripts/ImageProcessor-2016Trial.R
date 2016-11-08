@@ -110,4 +110,10 @@ mean((factor(all.answers$PhotoType))==all.answers$ProposedType)
 
 # 99.5%. Wow.
 
-all.answers[which(all.answers$PhotoType!=all.answers$ProposedType),]
+all.answers[which(factor(all.answers$PhotoType)!=all.answers$ProposedType),]
+
+# proportion of these photos that is flower:
+
+all.answers[which(factor(all.answers$PhotoType)!=all.answers$ProposedType),"flower"]/sum(all.answers[which(factor(all.answers$PhotoType)!=all.answers$ProposedType),2:4])
+
+# these proportions are well below a danger limit that I could create.
