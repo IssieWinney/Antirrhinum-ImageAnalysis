@@ -9,150 +9,148 @@
 // measures the frequency of each pixel colour
 // and outputs the pixel frequencies to a .txt file
 
+myClassifier = "C:/Users/Isabel/ownCloud/Git-Analysis/Antirrhinum-ImageAnalysis/TrainingImages/TrainingTheWEKA/TrainingSet.model"
+myInformation = "C:/Users/Isabel/ownCloud/Git-Analysis/Antirrhinum-ImageAnalysis/TrainingImages/TrainingTheWEKA/TrainingSet.arff"
+anImageSequence = "C:/Users/Isabel/ownCloud/Git-Analysis/Antirrhinum-ImageAnalysis/TrainingImages/TrainingTheWEKA/Resized/P1000932.jpg"
+
+// define the location of the segmentation analysis:
+filepath = "C:\\Users\\Isabel\\Documents\\BAGP2016\\ImageProcessing\\2016"
+
+myInput = filepath + "\\Resized"
+myOutput = filepath + "\\Processed"
+
+
 // First, load Trainable WEKA Segmentation program and classification data: 
 
-
-		
 function openWEKA(image, classifier, information){
 
-		// Have to open an image to open WEKA, therefore open the original
-		// training sequence:
+	// Have to open an image to open WEKA, therefore open the original
+	// training sequence:
 
-		run("Image Sequence...", "open=" + image + " sort");
+	run("Image Sequence...", "open=" + image + " sort");
 
-		run("Trainable Weka Segmentation"); 
-		wait(200);
-		// (you have to wait here or else java does not load properly and everything stops working)
+	run("Trainable Weka Segmentation"); 
+	wait(200);
+	// (you have to wait here or else java does not load properly and everything stops working)
 
-		// load the classifier:
-		call("trainableSegmentation.Weka_Segmentation.loadClassifier",
-			classifier);
-		wait(10000);
+	// load the classifier:
+	call("trainableSegmentation.Weka_Segmentation.loadClassifier",
+		classifier);
+	wait(10000);
 
-		// load the traces:
-		call("trainableSegmentation.Weka_Segmentation.loadData", 
-			information);
+	// load the traces:
+	call("trainableSegmentation.Weka_Segmentation.loadData", 
+		information);
 
 }
 
-	myClassifier = "C:\\Users\\User\\ownCloud\\Git-Analysis\\Antirrhinum-ImageAnalysis\\TrainingImages\\TrainingSet.model"
-	myInformation = "C:\\Users\\User\\ownCloud\\Git-Analysis\\Antirrhinum-ImageAnalysis\\TrainingImages\\TrainingSet.arff"
-	anImageSequence = "C:\\Users\\User\\ownCloud\\Git-Analysis\\Antirrhinum-ImageAnalysis\\TrainingImages\\ResizedImages\\Original-ImageTyping_P1000932.jpg"
-	openWEKA(anImageSequence, myClassifier, myInformation)
 
 
+// apply the WEKA
 
+function WEKAmyPhotos(inputDir, inputFile, outputDir, outputFile){
 
+	File.makeDirectory(outputDir);
 
-				function WEKAmyPhotos(inputDir, inputFile, outputDir, outputFile){
-
-				File.makeDirectory(outputDir);
-
-				selectWindow("Trainable Weka Segmentation v3.2.2");
+	selectWindow("Trainable Weka Segmentation v3.2.2");
 		
-				// apply the classifier:
-				call("trainableSegmentation.Weka_Segmentation.applyClassifier",
-					inputDir, 
-					inputFile,
-					"showResults=true", 
-					"storeResults=false", 
-					"probabilityMaps=false",
-					"")
-
-				// wait for the segmentation to complete. In future, this should be
-				// linked to run time.
-				wait(150);
-
-				selectWindow("Classification result");
-				run("8-bit");
-				open("C:\\Users\\User\\ownCloud\\Git-Analysis\\Antirrhinum-ImageAnalysis\\TrainingImages\\LUT-blackwhitegrey.lut");
-
-				saveAs("PNG", outputFile);
-
-				close("Classification result");
-		}
-
-	myInput = "C:\\Users\\User\\ownCloud\\Git-Analysis\\Antirrhinum-ImageAnalysis\\TrainingImages\\20160517\\Resized"
-	myFolder = "C:\\Users\\User\\ownCloud\\Git-Analysis\\Antirrhinum-ImageAnalysis\\TrainingImages\\20160517\\Processed"
+	// apply the classifier:
+	call("trainableSegmentation.Weka_Segmentation.applyClassifier",
+		inputDir, 
+		inputFile,
+		"showResults=true", 
+		"storeResults=false", 
+		"probabilityMaps=false",
+		"")
 	
-	setBatchMode(true); 
-	myList = getFileList(myInput);
-	for (i = 0; i < myList.length; i++)
-	        WEKAmyPhotos(myInput, myList[i], myFolder, myFolder+"\\"+myList[i]);
-	setBatchMode(false);
+	// wait for the segmentation to complete. In future, this should be
+	// linked to run time.
+	wait(150);
+
+	selectWindow("Classification result");
+	run("8-bit");
+	open("C:\\Users\\Isabel\\ownCloud\\Git-Analysis\\Antirrhinum-ImageAnalysis\\Functions\\LUT-blackwhitegrey.lut");
+
+	saveAs("PNG", outputFile);
+
+	close("Classification result");
+
+}
+
 
 
 // Then, analyse the segmented photos for pixel frequencies:
 
-		function analysePhotoType(filename, filepath, output){
+function analysePhotoType(filename, filepath){
 		
-				// open the image
-		
-				open(filepath+filename);
-
-				// this WEKA image is in RGB, and we need 8 bit greyscale.
-				// however, when we run statistical region merging on
-				// 8 bit greyscale, the flower regions are not different
-				// enough from the background and the result is that too
-				// few pixels are assigned as flower pixels and we cannot
-				// distinguish flowers from leaves.
-
-				// however, if we first convert to 16 bit greyscale (or 32,
-				// both work well), we have a greater pixel range and so
-				// enough difference between the flower and background to
-				// distinguish the flower pixels. We can then convert back
-				// to 8 bit, and retain the colour separation for SRM:
-
-				run("16-bit");
-				run("8-bit");
-		
-				// convert the image to three main colours
-		
-				run("Statistical Region Merging", "q=3 showaverages");
-		
-				selectWindow(filename);
-		
-				close(filename);
-		
-				selectWindow(filename + " (SRM Q=3.0)");
+	// make results directory:
+	File.makeDirectory(filepath + "Results");
 				
-				// save histogram outputs
+	// open the image
 		
-				nBins=3;
+	open(filepath+"Processed\\"+filename);
+
+	selectWindow(filename);
 				
-				getHistogram(values, counts, nBins); 
+	// save histogram outputs
 		
-				newoutput = output + filename + ".txt";
+	nBins=3;
+				
+	// make a histogram of the image
+	
+	getHistogram(values, counts, nBins); 
 		
-				d=File.open(newoutput); 
+	newoutput = filepath+"Results\\HistogramOutput" + filename + ".txt";
 		
-				print(d, "environment" + "\t" + "whitebox" + "\t" + "flower" + "\t" + "file");
+	d=File.open(newoutput); 
 		
-		        // This is the line that sends the results to output
-		        print(d, counts[0]+"\t"+counts[1]+"\t"+counts[2]+"\t"+filename);
+	print(d, "environment" + "\t" + "whitebox" + "\t" + "flower" + "\t" + "file");
 		
-		        wait(10);
+	// This is the line that sends the results to output
+	print(d, counts[0]+"\t"+counts[1]+"\t"+counts[2]+"\t"+filename);
 		
-		        // close the files
+	wait(10);
+		
+	// close the files
 		        
-				File.close(d);
+	File.close(d);
 		
-				close(filename + " (SRM Q=3.0)");
+	close(filename);
 		
-		}
+}
 
 // and now, this batch process is run on all the photos taken in 2016:
 
+// open WEKA
+openWEKA(anImageSequence, myClassifier, myInformation)
 
-// define the location of the saved segmented images:
-	rootpath = "C:\\Users\\User\\ownCloud\\Git-Analysis\\Antirrhinum-ImageAnalysis\\TrainingImages\\20160517\\"
-	filepath = rootpath+"Processed\\"
-// and the location for saving the output data:
-	output = rootpath+"Results\\HistogramOutput"
 
-// Recursively run the macro on the segmented images:
-	setBatchMode(true); 
-	list = getFileList(filepath);
-	for (i = 0; i < list.length; i++)
-	        analysePhotoType(list[i], filepath, output);
-	setBatchMode(false);
+// classify photos
+setBatchMode(true); 
+myList = getFileList(myInput);
+for (i = 0; i < myList.length; i++)
+	WEKAmyPhotos(myInput, myList[i], myOutput, myOutput+"\\"+myList[i]);
+setBatchMode(false);
+
+
+// close WEKA
+
+selectWindow("Trainable Weka Segmentation v3.2.2");
+close();
+selectWindow("Resized");
+close();
+
+
+// Recursively histogram the segmented images:
+setBatchMode(true); 
+list = getFileList(myOutput);
+for (i = 0; i < list.length; i++)
+	analysePhotoType(list[i], filepath);
+setBatchMode(false);
+
+	
+// and now tell the user that everything is finished
+
+Dialog.create("I'm done!"); 
+Dialog.addMessage("Step 2 complete. Please move on to step 3."); 
+Dialog.show() 
