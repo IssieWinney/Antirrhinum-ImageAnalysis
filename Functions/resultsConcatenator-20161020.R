@@ -43,4 +43,7 @@ resultsConcatenator <- function(filepath, output){
               row.names = FALSE,
               sep = "\t")
   
+  system('CMD /C "ECHO Your results have been concatenated: please move on to step 4 && PAUSE"', 
+         invisible=FALSE, wait=FALSE)
+  
 }
