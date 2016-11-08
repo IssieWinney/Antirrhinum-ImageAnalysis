@@ -91,6 +91,9 @@ BatchResize <- function(folder, size, output.loc){
               length(savefiles),
               " for you :)"))
   
+  system('CMD /C "ECHO Step 1 has finished: please move on to step 2 && PAUSE"', 
+         invisible=FALSE, wait=FALSE)
+  
 }
 
 # example of use:
