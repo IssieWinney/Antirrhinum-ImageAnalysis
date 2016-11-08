@@ -49,6 +49,9 @@ imageClassifier <- function(data){
   
   return(output)
   
+  system('CMD /C "ECHO Images classified: you can now get on with life && PAUSE"', 
+         invisible=FALSE, wait=FALSE)
+  
 }
 
 
