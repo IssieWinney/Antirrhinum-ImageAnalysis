@@ -106,7 +106,7 @@ head(all.answers)
 
 # how many photos are classified correctly? (a mean of 
 # 1 means that all photos are correctly classified):
-mean(all.answers$PhotoType==all.answers$ProposedType)
+mean((factor(all.answers$PhotoType))==all.answers$ProposedType)
 
 # 99.5%. Wow.
 
