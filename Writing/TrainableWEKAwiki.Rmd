@@ -47,6 +47,12 @@ To process multiple images, ask to 'Apply classifier' and select multiple images
 
 NOTE: using this option within the original folder will \textbf{overwrite} the existing photo. This is because the WEKA will make a file of the same name. Make sure that the script makes a copy, or that the photos are copies already.
 
+
+#### I added more files to my classifier and I added more regions or lines to my classifier, but the processed files don't change. what's wrong?
+
+The data is not actually the traces that you draw. The data is a set of classifiers extrapolated from those traces, which means \textbf{you must click 'train classifier' before saving}.
+
+
 ### What next?
 
 The black and white outputs from the segmentation can be classified as percentage of black pixels to percentage of white. If the segmentation has been defined well, this results in a percentage of vegetative to non-vegetative cover within the image.
