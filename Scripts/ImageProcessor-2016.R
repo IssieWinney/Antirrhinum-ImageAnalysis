@@ -4,12 +4,14 @@
 # This is a program to take a folder of images and classify all the images in
 # the folder as environment images, leaf images, or flower images.
 
-# You need to start by specifying the filepath to the photos here:
+# You need to start by specifying the filepath to the photos
+# and the year that you are analysing here:
 
-myRoot <- "C:/Users/User/Documents/BAGP2016/"
+myRoot <- "C:/Users/Isabel/Documents/BAGP2016/"
+year <- 2016
 
-PhotoFilepath <- paste(myRoot, "Test", sep = "")
-OutputFilepath <- paste(myRoot, "ImageProcessing/Resized", sep = "")
+PhotoFilepath <- paste(myRoot, "BAGP-Photos2016", sep = "")
+OutputFilepath <- paste(myRoot, "ImageProcessing/2016/Resized", sep = "")
 
 # ASSUMPTIONS:
 # PhotoFilepath contains only photos within folders - there are no loose photos
@@ -28,6 +30,10 @@ OutputFilepath <- paste(myRoot, "ImageProcessing/Resized", sep = "")
 
 source("./Functions/BatchResize-20161019.R")
 # note that BatchResize calls filenameExtractor.
+
+# create directories for files.
+dir.create(paste(myRoot, "ImageProcessing/", sep = ""))
+dir.create(paste(myRoot, "ImageProcessing/", year, sep = ""))
 
 BatchResize(PhotoFilepath, 0.1, OutputFilepath)
 
@@ -49,7 +55,7 @@ BatchResize(PhotoFilepath, 0.1, OutputFilepath)
 
 source("./Functions/resultsConcatenator-20161020.R")
 
-ResultsFilepath <- paste(myRoot, "ImageProcessing/Results/", sep = "")
+ResultsFilepath <- paste(myRoot, "ImageProcessing", year, "/Results/", sep = "")
 
 resultsConcatenator(ResultsFilepath,"SegmentationResults")
 
@@ -72,3 +78,37 @@ write.table(myResults,
             file = paste(ResultsFilepath, "SegmentationResults.txt", sep = ""),
             row.names = FALSE,
             sep = "\t")
+
+
+############################################################################
+############################ Percentage correct ############################
+############################################################################
+
+# for 2016, I have manually assigned about half of the photo types.
+# So using this data, how reliable is the segmentation?
+
+answers <- read.table("./Data/ManuallyAssignedPhotoTypes-20161024.txt",
+                      header=T)
+
+names(myResults) <- c("environment", "whitebox", "flower", "fileFolder", "ProposedType")
+
+head(myResults)
+head(answers)
+tail(answers)
+
+# make a variable to match files between the two data frames:
+answers$fileFolder <- paste(answers$Folder, answers$File, sep = "_")
+answers$fileFolder <- gsub(".JPG", ".png", answers$fileFolder)
+
+# match:
+all.answers <- merge(myResults, answers)
+
+head(all.answers)
+
+# how many photos are classified correctly? (a mean of 
+# 1 means that all photos are correctly classified):
+mean(all.answers$PhotoType==all.answers$ProposedType)
+
+# 99.5%. Wow.
+
+all.answers[which(all.answers$PhotoType!=all.answers$ProposedType),]
