@@ -1,0 +1,103 @@
+---
+title: "Lab Book"
+author: "Isabel Winney"
+date: "28 October 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Lab Book
+
+This is the lab book for my explorations of image analysis. It has been created a bit late - after the initial training and testing phase, so I will recount as much progress as possible.
+
+### 2016-10-28
+
+Today I aim to make a single program that anyone can use to process a batch of files and classify them as environment photos, leaf photos, or flower photos.
+
+#### Done so far:
+
+Testing and training of images (see TrainingImages folder). Here you will find TrainingTheWEKA, which are all the photos used to manually train the WEKA (see the TrainableWEKAwiki.Rmd file for how to use WEKA in imageJ). The folder comprises the original photos, which are the last 15 photos from randomisation-20160830.txt, the resized images, these resized images after WEKA processing, and the histogram results of pixel frequencies in the processed images.
+
+Here you can also find the TrainingSet files. These are the output of the WEKA training, and comprise a MODEL file that denotes the number of classes and other structural info about the WEKA, and the ARFF file which contains the necessary data to apply the MODEL to a new set of images.
+
+All this was subsequently tested on 56 photos taken on 2016-05-17, and all the output of this further testing can be found under folder 20160517.
+
+#### New today:
+
+I reorganised the scripts in to functions, training, and executable scripts.
+
+I drafted an R script to run all sections of the image processing sequence. I have not worked out how to run Fiji from R yet. The other code sections are automated and require input at the top of the script but nowhere else.
+
+Problem: I am segmenting the first two days of photos, and it looks like the DSCF photos produced by the black camera are not well recognised by the image segmentation - many of the flowers are misclassified. Therefore I need to add some photos by this camera to the training set.
+
+
+### 2016-10-31
+
+Today I have added the first 15 photos from the 2016 photos whose names begin with "DSCF" to the training set, and am retraining the WEKA classifier. These are photos taken by the black camera. This is in response to discovering on Friday that these photos were frequently misclassified by the WEKA segmentor, especially the flower photos.
+
+Afternoon: the new trained photos work very well, and put flowers in DSCF images. Commencing testing on the first two days of photos from 2016.
+
+Evening: turns out that three photos were badly classified, with the numbers and edge of a post-it marked as flowers. These photos were DSCF0001 - DSCF0003. I added DSCF0002 to the training set. This was the photo with the most misclassified space out of the three.
+
+However, encouragingly, I have gone from a percentage of ~65% correct classifications up to ~85%, so this is much much better. But not good enough yet.
+
+### 2016-11-02
+
+The classification is now 94% correct, but there are two strange errors:
+
+1 - many DSCF photos classified as flowers
+2 - one P... photo classified as environment
+
+In the first case, it is as though my classifier has forgotten the training carried out on the DSCF images - it is even misclassifying the image that I added to the classifier set! It is possible that the program is unable to save all of the classifier set because I am unable to load all pictures at the same time, owing to the DSCF images being two pixels smaller.
+
+To solve this, I am resizing the P... images and re-training the classifier. I'm using Image-->Adjust-->size because this process is not going to be repeated, and I don't want to re-write my batch resizing function in R to do it.
+
+
+### 2016-11-03
+
+The newly trained classifier has a success rate of 97%. Good but could be better. the problem is still misclassifying leaves as flowers (and two flowers as leaves).
+
+The problem seems to be the histogram. There are about 250 flower pixels in the first misclassified image, image P1080707.png. This figure comes from opening the picture manually and checking the histogram. But through my histogram function the number of flower pixels is given as 2394. This is clearly not right.
+
+So what if I make a full (256) bin histogram, but only save the bins I am interested in?
+
+Interesting. Discovered that the code about statistical region merging was still in the function. I deleted that a long time ago. I'm not happy with the Java editor in ImageJ.
+
+Code deleted and success is up to 99.5%! The only misclassified images are two images of a fairly dark, old flower. I have added one to the WEKA training sequence and will re-train.
+
+I have added one of these flowers to the training photos: P1080868.
+
+Afternoon: well I re-trained the WEKA and ran it.
+
+
+### 2016-11-04
+
+Re-training wasn't good enough. Adding the second tricky flower photo (P1080867) to the training photos. Still having difficulty.
+
+Late afternoon. Might have discovered the problem. The classifier MUST BE TRAINED before being applied.
+
+Evening: the re-trained classifier is worse because it is mis-classifying many pixels from the box as flowers, leading to multiple leaves being identified as flowers.
+
+Suggest return to previous version of classifier.
+
+
+### 2016-11-07
+
+Returned to previous classifier. Began the process on all 2016 photos.
+
+### 2016-11-08
+
+Continuing process on all 2016 photos. Resizing photos took ~22 hours.
+
+
+### December 2016
+
+I forgot to update my lab book as I went along, so this is a summary of my progress.
+
+I ran the entire image processor, and then manually assigned the plant IDs to each image and corrected the images with incorrect classifications. The classifier is 99% accurate.
+
+I have then ordered the list of photos by the randomisation order produced back in September or so, and removed all duplicate plant IDs to create the order in which I will view the environment photos.
