@@ -14,10 +14,10 @@ myInformation = "C:/Users/Isabel/ownCloud/Git-Analysis/Antirrhinum-ImageAnalysis
 anImageSequence = "C:/Users/Isabel/ownCloud/Git-Analysis/Antirrhinum-ImageAnalysis/TrainingImages/TrainingTheWEKA/Resized/P1000932.jpg"
 
 // define the location of the segmentation analysis:
-filepath = "C:\\Users\\Isabel\\Documents\\BAGP2016\\ImageProcessing\\2016"
+filepath = "C:\\Users\\Isabel\\Documents\\BAGP2016\\ImageProcessing\\2016\\"
 
-myInput = filepath + "\\Resized"
-myOutput = filepath + "\\Processed"
+myInput = filepath + "Resized"
+myOutput = filepath + "Processed"
 
 
 // First, load Trainable WEKA Segmentation program and classification data: 
